@@ -1,6 +1,6 @@
 
 let expenses = JSON.parse(localStorage.getItem("expenses")) || []; 
-// Load saved expenses or use an empty array.
+// Load saved expenses or use an empty array
 
 // Display expenses
 function showExpenses() {
@@ -16,7 +16,7 @@ function showExpenses() {
             "<td>Rs " + expenses[i].amount + "</td>" +
             "<td><button onclick='deleteExpense(" + expenses[i].id + ")'>Delete</button></td>" +
             "</tr>"; 
-            // Create a table row for each expense.
+            // Create a table row for each expense
 
         total += expenses[i].amount;
     }
@@ -26,26 +26,26 @@ function showExpenses() {
     }
 
     document.getElementById("total").innerHTML = "Total: Rs " + total.toFixed(2); 
-                  // Show total with two decimal places.
+                  // Show total with two decimal places
 }
 
 // Add expense
 document.getElementById("form").onsubmit = function(e) {
     e.preventDefault(); 
-                // Stop the page from refreshing.
+                // Stop the page from refreshing
 
     let expense = {
         id: Date.now(),
         title: document.getElementById("title").value,
         amount: Number(document.getElementById("amount").value),
-         // Convert input text into a number.
+                 // Convert input text into a number
         category: document.getElementById("category").value,
         date: document.getElementById("date").value
     };
 
     expenses.push(expense);
     localStorage.setItem("expenses", JSON.stringify(expenses));
-                       // Convert array to JSON text and save it.
+                       // Convert array to JSON text and save it
     showExpenses();
 
     document.getElementById("form").reset();
@@ -60,7 +60,7 @@ function deleteExpense(id) {
         if (expenses[i].id != id) {
             newExpenses.push(expenses[i]); 
                         
-            // Keep expenses that don't match the selected ID.
+            // Keep expenses that don't match the selected ID
         }
     }
 
@@ -69,8 +69,8 @@ function deleteExpense(id) {
     showExpenses();
 }
 
-// Today's date
+//Today date
 document.getElementById("date").valueAsDate = new Date();
 
-// Show saved expenses
+//Show saved expenses
 showExpenses();

@@ -12,7 +12,12 @@
 
       <div class="card">
         <form id="form">
-          <input id="title" placeholder="Name" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '')" required />
+          <input
+            id="title"
+            placeholder="Name"
+            oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '')"
+            required
+          />
           <input
             id="amount"
             type="number"
@@ -29,6 +34,7 @@
             <option>Health</option>
             <option>Other</option>
           </select>
+          
           <input id="date" type="date" required />
           <button>Add</button>
         </form>
