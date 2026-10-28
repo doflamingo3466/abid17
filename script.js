@@ -1,50 +1,73 @@
-let expenses = [];
-try {
-  expenses = JSON.parse(localStorage.getItem("expenses")) || [];
-} catch (e) {}
 
-const $ = (id) => document.getElementById(id);
-const save = () => {
-  try {
+let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+
+// Display expenses
+function showExpenses() {
+    let list = document.getElementById("list");
+    let total = 0;
+
+    list.innerHTML = "";
+
+    for (let i = 0; i < expenses.length; i++) {
+        list.innerHTML += "<tr>" +
+            "<td>" + expenses[i].title + "</td>" +
+            "<td>" + expenses[i].category + "</td>" +
+            "<td>" + expenses[i].date + "</td>" +
+            "<td>Rs " + expenses[i].amount + "</td>" +
+            "<td><button onclick='deleteExpense(" + expenses[i].id + ")'>Delete</button></td>" +
+            "</tr>";
+
+        total = total + expenses[i].amount;
+    }
+
+    if (expenses.length == 0) {
+        list.innerHTML = "<tr><td colspan='5'>No expenses yet.</td></tr>";
+    }
+
+    document.getElementById("total").innerHTML = "Total: Rs " + total.toFixed(2);
+}
+
+// Add expense
+document.getElementById("form").onsubmit = function(event) {
+    event.preventDefault();
+
+    let expense = {
+        id: Date.now(),
+        title: document.getElementById("title").value,
+        amount: Number(document.getElementById("amount").value),
+        category: document.getElementById("category").value,
+        date: document.getElementById("date").value
+    };
+
+    expenses.push(expense);
+
     localStorage.setItem("expenses", JSON.stringify(expenses));
-  } catch (e) {}
+
+    showExpenses();
+
+    document.getElementById("form").reset();
+    document.getElementById("date").valueAsDate = new Date();
 };
 
-function render() {
-  $("list").innerHTML =
-    expenses
-      .map(
-        (e) =>
-          `<tr><td>${e.title}</td><td>${e.category}</td><td>${e.date}
-          </td><td class="right">Rs ${e.amount.toFixed(2)}</td><td class="right"><button class="del" onclick="del(${e.id})">
-          Delete</button></td></tr>`,
-      )
-      .join("") ||
-    `<tr><td colspan="5" class="empty">No expenses yet.</td></tr>`;
-  $("total").textContent =
-    "Total: Rs " + expenses.reduce((sum, e) => sum + e.amount, 0).toFixed(2);
+// Delete expense
+function deleteExpense(id) {
+    let newExpenses = [];
+
+    for (let i = 0; i < expenses.length; i++) {
+        if (expenses[i].id != id) {
+            newExpenses.push(expenses[i]);
+        }
+    }
+
+    expenses = newExpenses;
+
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+
+    showExpenses();
 }
 
-$("form").onsubmit = function (event) {
-  event.preventDefault();
-  expenses.push({
-    id: Date.now(),
-    title: $("title").value.trim(),
-    amount: Number($("amount").value),
-    category: $("category").value,
-    date: $("date").value,
-  });
-  save();
-  render();
-  this.reset();
-  $("date").valueAsDate = new Date();
-};
+// Today's date
+document.getElementById("date").valueAsDate = new Date();
 
-function del(id) {
-  expenses = expenses.filter((e) => e.id !== id);
-  save();
-  render();
-}
-
-$("date").valueAsDate = new Date();
-render();
+// Show saved expenses
+showExpenses();
